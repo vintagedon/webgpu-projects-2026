@@ -1,0 +1,53 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--bg-deep);
+  color: var(--text);
+  font-family: var(--font-ui);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(56, 189, 248, 0.16), transparent 32rem),
+    radial-gradient(circle at 85% 12%, rgba(244, 114, 182, 0.08), transparent 22rem),
+    radial-gradient(circle at 8% 40%, rgba(34, 197, 94, 0.08), transparent 24rem),
+    linear-gradient(180deg, var(--bg), var(--bg-deep) 70%);
+  color: var(--text);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--neon-blue);
+  outline-offset: 3px;
+}
+
+#app {
+  min-height: 100vh;
+}

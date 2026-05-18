@@ -1,0 +1,11 @@
+{
+  "WebGPU": "A modern browser API exposing GPU hardware for rendering and general-purpose compute, succeeding WebGL.",
+  "WGSL": "WebGPU Shading Language. The shader language used by WebGPU, replacing GLSL.",
+  "Compute Shader": "A GPU program that performs general-purpose computation rather than rendering graphics.",
+  "Storage Buffer": "A GPU buffer that compute shaders can read from and write to, used for large datasets like particle positions.",
+  "Bind Group": "A WebGPU resource that bundles buffers and textures together for shader access.",
+  "Dispatch": "The command that launches a compute shader across a specified number of workgroups.",
+  "Ping-Pong": "A double-buffering technique where two buffers alternate as source and destination each frame.",
+  "SDF": "Signed Distance Field. A mathematical representation of shapes used in raymarching.",
+  "Raymarching": "A rendering technique that steps along rays to find surface intersections using distance functions."
+}
