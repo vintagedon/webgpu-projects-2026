@@ -3,6 +3,13 @@ export interface FrameStats {
   frameTimeMs: number;
   computeTimeMs: number;
   renderTimeMs: number;
+  /**
+   * Whether the pass timings above are GPU-timestamp-accurate. False here means
+   * they are CPU-side `performance.now()` encode/submit brackets (the default
+   * path). Originates from {@link FrameTimer.supportsGpuTimestamps}; the real
+   * timestamp-query resolve/readback is wired in a later spec.
+   */
+  gpuTiming: boolean;
 }
 
 export interface FrameRecorder {
@@ -16,7 +23,8 @@ const EMPTY_STATS: FrameStats = {
   fps: 0,
   frameTimeMs: 0,
   computeTimeMs: 0,
-  renderTimeMs: 0
+  renderTimeMs: 0,
+  gpuTiming: false
 };
 
 export class FrameTimer {
@@ -45,6 +53,18 @@ export class FrameTimer {
     return this.stats;
   }
 
+  /**
+   * Begins a frame and returns a {@link FrameRecorder} the demo uses to bracket
+   * its compute and render work.
+   *
+   * Measurement semantics: until the GPU timestamp-query path is wired, the
+   * recorder measures pass cost with CPU-side `performance.now()` brackets
+   * around command encode and queue.submit — i.e. host overhead, not GPU
+   * execution time. That is honest enough for the stub and for relative tuning,
+   * but the readout must not be presented as GPU-accurate. Spec 04 replaces the
+   * begin/end pairs with timestamp-query writes when
+   * {@link supportsGpuTimestamps} is true and flips {@link FrameStats.gpuTiming}.
+   */
   beginFrame(): FrameRecorder {
     const now = performance.now();
     this.frameStart = now;
@@ -88,7 +108,8 @@ export class FrameTimer {
       fps: Math.round(fps),
       frameTimeMs: Math.round(frameTimeMs * 100) / 100,
       computeTimeMs: Math.round(this.computeTimeMs * 100) / 100,
-      renderTimeMs: Math.round(this.renderTimeMs * 100) / 100
+      renderTimeMs: Math.round(this.renderTimeMs * 100) / 100,
+      gpuTiming: this.supportsGpuTimestamps()
     };
 
     return this.stats;

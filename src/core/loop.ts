@@ -1,6 +1,15 @@
 import { FrameRecorder, FrameTimer, type FrameStats } from "./timing";
 
+/**
+ * Render loop contract. Per animation frame the loop runs `stepsPerFrame`
+ * compute steps (onStep) followed by exactly one render (onFrame). The demo
+ * brackets its GPU work inside each callback via the shared recorder so timing
+ * aggregates correctly: onStep passes are summed into computeTimeMs across all
+ * steps in the frame, onFrame into renderTimeMs. stepsPerFrame defaults to 1,
+ * which reproduces the render-only stub (no onStep) unchanged.
+ */
 export interface RenderLoopOptions {
+  onStep?: (deltaTime: number, stepIndex: number, recorder: FrameRecorder) => void;
   onFrame: (deltaTime: number, frameCount: number, recorder: FrameRecorder) => void;
   onStats?: (stats: FrameStats) => void;
   stepsPerFrame?: number;
@@ -33,6 +42,11 @@ export function createRenderLoop(options: RenderLoopOptions): RenderLoop {
     lastTime = time;
 
     const recorder = timer.beginFrame();
+    if (options.onStep) {
+      for (let stepIndex = 0; stepIndex < stepsPerFrame; stepIndex++) {
+        options.onStep(deltaTime, stepIndex, recorder);
+      }
+    }
     options.onFrame(deltaTime, frameCount, recorder);
 
     const stats = timer.endFrame();

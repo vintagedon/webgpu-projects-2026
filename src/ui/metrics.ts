@@ -60,9 +60,11 @@ export function createMetricsPanel(container: HTMLElement): MetricsPanel {
 
   const renderFill = renderBar.querySelector<HTMLElement>(".bar-fill");
   const renderValue = renderBar.querySelector<HTMLElement>(".bar-value");
+  const renderLabel = renderBar.querySelector<HTMLElement>(".bar-label");
   const computeFill = computeBar.querySelector<HTMLElement>(".bar-fill");
   const computeValue = computeBar.querySelector<HTMLElement>(".bar-value");
-  if (!renderFill || !renderValue || !computeFill || !computeValue) {
+  const computeLabel = computeBar.querySelector<HTMLElement>(".bar-label");
+  if (!renderFill || !renderValue || !renderLabel || !computeFill || !computeValue || !computeLabel) {
     throw new Error("Metrics bars failed to render.");
   }
 
@@ -128,11 +130,19 @@ export function createMetricsPanel(container: HTMLElement): MetricsPanel {
   });
   resizeObserver.observe(sparkline);
 
+  // Pass-time labels must stay honest: the bars are fed by performance.now()
+  // brackets around encode/submit (CPU-side) until the GPU timestamp-query path
+  // is wired, so they are tagged "cpu" unless stats.gpuTiming says otherwise.
+  // stats.gpuTiming originates from FrameTimer.supportsGpuTimestamps().
+  const tag = (gpu: boolean): string => (gpu ? "gpu" : "cpu");
+
   return {
     element,
     updateStats(stats: FrameStats): void {
       fpsValue.textContent = String(stats.fps);
       frameTime.textContent = `${stats.frameTimeMs.toFixed(2)} ms`;
+      renderLabel.textContent = `render · ${tag(stats.gpuTiming)}`;
+      computeLabel.textContent = `compute · ${tag(stats.gpuTiming)}`;
       setBar(renderFill, renderValue, stats.renderTimeMs);
       setBar(computeFill, computeValue, stats.computeTimeMs);
 
