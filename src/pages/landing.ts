@@ -11,6 +11,12 @@ interface ProjectCard {
 
 const cards: ProjectCard[] = [
   {
+    name: "Harness Stub",
+    description: "A gradient demo proving the shared WebGPU harness: two-pane layout, neon controls, and live telemetry.",
+    tags: ["WebGPU", "Harness", "Live"],
+    href: "/stub/"
+  },
+  {
     name: "GPU Particle Playground",
     description: "A high-count particle field proving the shared compute harness and neon telemetry surface.",
     tags: ["WebGPU", "Storage Buffer", "WGSL"],

@@ -35,6 +35,7 @@ work-logs/
 | File | Description | Status |
 |------|-------------|--------|
 | [README-pending.md](README-pending.md) | Placeholder marker from scaffold setup; ignored by the `*-pending.md` glob | Planned |
+| [worklog-2026-05-18-webgpu-demo-harness.md](worklog-2026-05-18-webgpu-demo-harness.md) | WebGPU demo harness: core modules, UI controls, and stub gradient demo | ✅ Complete |
 
 ---
 

@@ -1,0 +1,380 @@
+/* ============================================================================
+   Demo Harness
+   Two-pane layout, metrics panel, settings flyout, and neon control wrappers.
+   Built on top of the site template design system (variables, components).
+   ============================================================================ */
+
+.site-shell--demo .site-main {
+  display: flex;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Two-pane layout
+   --------------------------------------------------------------------------- */
+
+.demo-layout {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 4.5rem);
+}
+
+.demo-left {
+  display: flex;
+  width: 18%;
+  min-width: 14rem;
+  max-width: 22rem;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  overflow-y: auto;
+}
+
+.demo-identity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.demo-title {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.05rem, 1.6vw, 1.45rem);
+  line-height: 1.1;
+  text-shadow: 0 0 18px rgba(56, 189, 248, 0.55);
+}
+
+.demo-desc {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.demo-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.demo-right {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.demo-canvas-wrap {
+  position: absolute;
+  inset: 0;
+}
+
+.gpu-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------------------------------------------------------------------------
+   Flyout trigger + sidebar
+   --------------------------------------------------------------------------- */
+
+.flyout-trigger {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: 40;
+  width: 2.5rem;
+  min-height: 2.5rem;
+}
+
+.flyout {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  padding: var(--space-3);
+  background: rgba(15, 23, 42, 0.97);
+  backdrop-filter: blur(8px);
+  transform: translateX(calc(100% + var(--space-3)));
+  opacity: 0;
+  transition:
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 160ms ease;
+  pointer-events: none;
+}
+
+.flyout--open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.flyout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.flyout-close {
+  min-height: 2rem;
+  width: 2rem;
+  padding: 0;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.flyout-tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
+  padding: 3px;
+  border: 1px solid rgba(168, 85, 247, 0.7);
+  border-radius: var(--radius-control);
+  background: var(--panel-muted);
+}
+
+.flyout-tabs[hidden] {
+  display: none;
+}
+
+.flyout-tabs .segment-btn {
+  border: 0;
+  border-radius: var(--radius-control);
+  padding: 0.3rem 0.6rem;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.flyout-tabs .segment-btn--active {
+  background: var(--neon-purple);
+  color: var(--bg);
+}
+
+.flyout-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.flyout-tab-panel[hidden] {
+  display: none;
+}
+
+.flyout-content[hidden] {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Metrics panel
+   --------------------------------------------------------------------------- */
+
+.metrics-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.metric-fps-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.metric-fps {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+
+.metric-fps .metric-value {
+  color: var(--neon-blue);
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
+}
+
+.metric-fps .metric-unit {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.sparkline {
+  flex: 1;
+  height: 2.5rem;
+}
+
+.metric-time,
+.metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.metric-label {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metric-number,
+.bar-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.metric-bar .bar {
+  height: 0.7rem;
+}
+
+.metrics-custom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  padding-top: var(--space-3);
+  border-top: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+/* ---------------------------------------------------------------------------
+   Controls (flyout wrappers)
+   --------------------------------------------------------------------------- */
+
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.control:last-child {
+  margin-bottom: 0;
+}
+
+.control-label {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.toggle-control {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.segment-control .segment {
+  flex-wrap: wrap;
+}
+
+.preset-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.preset-btn {
+  min-height: 2rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+}
+
+.preset-btn--active {
+  border-color: var(--neon-green);
+  color: var(--neon-green);
+  box-shadow: var(--shadow-green);
+}
+
+/* ---------------------------------------------------------------------------
+   WebGPU status (welcome modal body)
+   --------------------------------------------------------------------------- */
+
+.webgpu-status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.webgpu-status-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.webgpu-status--ok {
+  color: var(--neon-green);
+}
+
+.webgpu-status--bad {
+  color: var(--neon-red);
+}
+
+.webgpu-warning {
+  padding: var(--space-3);
+  border: 1px solid rgba(250, 204, 21, 0.82);
+  border-radius: var(--radius-panel);
+  background: rgba(250, 204, 21, 0.08);
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.webgpu-warning code {
+  color: var(--neon-yellow);
+}
+
+.webgpu-adapter {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-panel);
+  background: var(--panel-muted);
+  color: var(--text-soft);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .demo-layout {
+    flex-direction: column;
+    min-height: calc(100vh - 4.5rem);
+  }
+
+  .demo-left {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .demo-right {
+    min-height: 60vh;
+  }
+
+  .flyout {
+    position: fixed;
+    max-width: 84vw;
+  }
+}
