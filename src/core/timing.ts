@@ -4,10 +4,12 @@ export interface FrameStats {
   computeTimeMs: number;
   renderTimeMs: number;
   /**
-   * Whether the pass timings above are GPU-timestamp-accurate. False here means
-   * they are CPU-side `performance.now()` encode/submit brackets (the default
-   * path). Originates from {@link FrameTimer.supportsGpuTimestamps}; the real
-   * timestamp-query resolve/readback is wired in a later spec.
+   * Whether the pass timings above were actually produced by GPU timestamp
+   * queries. Stays `false` while the timings come from CPU-side
+   * `performance.now()` encode/submit brackets (the current path on every
+   * adapter). Spec 04 sets it `true` only in the code path that populates the
+   * timings from a real timestamp-query resolve/readback. Device capability is
+   * a separate question; see {@link FrameTimer.supportsGpuTimestamps}.
    */
   gpuTiming: boolean;
 }
@@ -109,7 +111,10 @@ export class FrameTimer {
       frameTimeMs: Math.round(frameTimeMs * 100) / 100,
       computeTimeMs: Math.round(this.computeTimeMs * 100) / 100,
       renderTimeMs: Math.round(this.renderTimeMs * 100) / 100,
-      gpuTiming: this.supportsGpuTimestamps()
+      // CPU performance.now() brackets feed these numbers today, so the timings
+      // are not GPU-sourced regardless of whether the adapter supports
+      // timestamp-query. Spec 04 flips this true when it wires the real path.
+      gpuTiming: false
     };
 
     return this.stats;
